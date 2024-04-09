@@ -138,3 +138,5 @@ REST_FRAMEWORK = {
            'rest_framework.authentication.TokenAuthentication',
        ],
    }
+
+MOTORCYCLE_API_URL='https://motorcycle-specs-database.p.rapidapi.com/'
