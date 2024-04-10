@@ -3,38 +3,71 @@ import http.client
 import json 
 from dotenv import dotenv_values
 from rest_framework.views import APIView
-
+from .serializers import BikeSerializer, Bike
+from rest_framework.response import Response
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_204_NO_CONTENT,
+    HTTP_201_CREATED,
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_401_UNAUTHORIZED
+)
 
 env=dotenv_values(".env")
 
-class AllMotorcycles(APIView):
-    def get(self, request, *args, **kwargs):
-        # http.client sends request from django server. allows for keeping keys hidden. fairly simple, may need to try something different for scalability
-        conn = http.client.HTTPSConnection("motorcycle-specs-database.p.rapidapi.com")
-        headers = {
+def get_motorcycle_info(motorcycle_id):
+    # hard coding prices for each bike since the api does not provide them
+    prices={
+        "817774":115,
+        "331639": 185
+    }
+     # http.client sends request from django server. allows for keeping keys hidden. fairly simple, may need to try something different for scalability
+    conn = http.client.HTTPSConnection("motorcycle-specs-database.p.rapidapi.com")
+    headers = {
             "X-RapidAPI-Key": env.get("MOTORCYCLE_API_KEY"),
             'X-RapidAPI-Host': "motorcycle-specs-database.p.rapidapi.com"
-        }
-
-        # get the first bike
-        conn.request("GET", "/article/817774", headers=headers) 
-        res1 = conn.getresponse()
-        data1 = res1.read()
-
-        # get the second bike
-        conn.request("GET", "/article/331639", headers=headers)
-        res2 = conn.getresponse()
-        data2 = res2.read()
-
-        # Close the connection
+    }
+    # get the specs from the api
+    conn.request("GET", f"/article/{motorcycle_id}", headers=headers) 
+    response = conn.getresponse()
+    data_details = response.read()
+    
+    if response.status == 200:
+        data=json.loads(data_details.decode("utf-8"))
+        motorcycle_data = data.get('articleCompleteInfo', {})
+        if motorcycle_id in prices:
+            motorcycle_data['price'] = prices[motorcycle_id]
+        else:
+            motorcycle_data['price'] = None
         conn.close()
+        return motorcycle_data
+    else:
+        conn.close()
+        return None
+
+
+
+class AllMotorcycles(APIView):
+    def get(self, request, *args, **kwargs):
+        motorcycle_ids = ["817774", "331639"]
+        serialized_bike_data=[]
+        for motorcycle_id in motorcycle_ids:
+            data = get_motorcycle_info(motorcycle_id)
+            if data:
+                price=data.get('price')
+                bike=Bike(
+                    make=data.get('makeName'),
+                    model=data.get('modelName'),
+                    description=data.get('categoryName'),
+                    price=price
+                )
+                serializer=BikeSerializer(bike)
+                serialized_bike_data.append(serializer.data)
+        return Response(serialized_bike_data, status=HTTP_200_OK)
+
+
+# NEED TO HANDLE IMAGES
 
         
-        if res1.status == 200 and res2.status == 200:
-            bike1_data = json.loads(data1.decode("utf-8"))
-            bike2_data = json.loads(data2.decode("utf-8"))
-
-            combined_data = [bike1_data, bike2_data]
-            return JsonResponse(combined_data, safe=False, status=200)
-        else:
-            return JsonResponse({'error': 'Failed to fetch data for one or both motorcycles'}, status=500)
+        
