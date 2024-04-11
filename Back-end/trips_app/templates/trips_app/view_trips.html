@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Trips</title>
+</head>
+<body>
+    <h1>View Trips</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through trips data and display each trip -->
+            {% for trip in trips %}
+            <tr>
+                <td>{{ trip.start_date }}</td>
+                <td>{{ trip.end_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html> 

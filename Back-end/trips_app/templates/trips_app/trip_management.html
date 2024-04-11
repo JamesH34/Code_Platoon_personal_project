@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trip Management</title>
+    <!-- Include necessary CSS and JavaScript files -->
+    <!-- <link rel="stylesheet" href="path/to/style.css">
+    <script src="path/to/script.js"></script> -->
+</head>
+<body>
+   
+
+    <!-- Main content of the page -->
+    <div class="container">
+        <h1>Trip Management</h1>
+        <!-- Include other templates or write your own HTML code here -->
+        <h1>Create Trip</h1>
+    
+    <form>
+        <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date" name="start-date">
+        
+        <label for="end-date">End Date:</label>
+        <input type="date" id="end-date" name="end-date">
+        
+        <input type="submit" value="Create Trip">
+    </form>
+    </div>
+    <div>
+        <h1>View Trips</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through trips data and display each trip -->
+            {% for trip in trips %}
+            <tr>
+                <td>{{ trip.start_date }}</td>
+                <td>{{ trip.end_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="container">
+        <h1>Update Trip Dates</h1>
+    
+    <form  method="POST">
+        <!-- {% csrf_token %} -->
+        
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ trip.start_date }}">
+        
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="{{ trip.end_date }}">
+        
+        <button type="submit">Update Dates</button>
+    </form>
+    </div>
+    <div class="container">
+        <h1>Delete Trip</h1>
+    
+    <p>Are you sure you want to delete this trip?</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+    </form>
+    
+    <a href="/trips">Cancel</a>
+    </div>
+
+</body>
+</html>

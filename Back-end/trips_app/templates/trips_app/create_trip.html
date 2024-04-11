@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Trip</title>
+</head>
+<body>
+    <h1>Create Trip</h1>
+    
+    <form method="post" action="{% url 'create_trip_api' %}">
+        {% csrf_token %}
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date">
+        
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date">
+        
+        <input type="submit" value="Create Trip">
+    </form>
+</body>
+</html>

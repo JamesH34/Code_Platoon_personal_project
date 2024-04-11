@@ -20,7 +20,11 @@ def get_motorcycle_info(motorcycle_id):
     # hard coding prices for each bike since the api does not provide them
     prices={
         "817774":115,
-        "331639": 185
+        "331639": 185,
+        "148037": 143,
+        "997759": 120,
+        "752591": 98,
+
     }
      # http.client sends request from django server. allows for keeping keys hidden. fairly simple, may need to try something different for scalability
     conn = http.client.HTTPSConnection("motorcycle-specs-database.p.rapidapi.com")
@@ -50,7 +54,7 @@ def get_motorcycle_info(motorcycle_id):
 
 class AllMotorcycles(APIView):
     def get(self, request, *args, **kwargs):
-        motorcycle_ids = ["817774", "331639"]
+        motorcycle_ids = ["817774", "331639", "752591", "148037", "997759"]
         serialized_bike_data=[]
         for motorcycle_id in motorcycle_ids:
             data = get_motorcycle_info(motorcycle_id)

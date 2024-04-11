@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Trip</title>
+</head>
+<body>
+    <h1>Delete Trip</h1>
+    
+    <p>Are you sure you want to delete this trip?</p>
+    
+    <form action="/trips/delete/{{ trip_id }}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+    </form>
+    
+    <a href="/trips">Cancel</a>
+</body>
+</html>

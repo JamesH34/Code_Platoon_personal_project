@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Trip Dates</title>
+</head>
+<body>
+    <h1>Update Trip Dates</h1>
+    
+    <form action="{% url 'update_trip' trip_id %}" method="POST">
+        {% csrf_token %}
+        
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ trip.start_date }}">
+        
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="{{ trip.end_date }}">
+        
+        <button type="submit">Update Dates</button>
+    </form>
+</body>
+</html>
