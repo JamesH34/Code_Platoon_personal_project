@@ -71,6 +71,19 @@ class AllMotorcycles(APIView):
         return Response(serialized_bike_data, status=HTTP_200_OK)
 
 
+# add the motorcycle details to the sql database
+    # def post(self, request, *args, **kwargs):
+    #     data=request.data
+    #     bike=Bike(
+    #         make=data.get('make'),
+    #         model=data.get('model'),
+    #         description=data.get('description'),
+    #         price=data.get('price')
+    #     )
+    #     bike.save()
+    #     serializer=BikeSerializer(bike)
+    #     return Response(serializer.data, status=HTTP_201_CREATED)
+
 # NEED TO HANDLE IMAGES
 
         
