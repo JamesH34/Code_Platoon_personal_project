@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
     const [formData, setFormData] = useState({
@@ -7,7 +8,8 @@ function SignupPage() {
         email: '',
         password: ''
       });
-    
+    const navigate = useNavigate();
+
       // Update state on input change
       const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -19,12 +21,12 @@ function SignupPage() {
     
       // Handle form submission
       const handleSubmit = async (event) => {
-        event.preventDefault();  // Prevent the default form submission behavior
-    
+        event.preventDefault();
         try {
-          // Send a POST request to the backend
           const response = await axios.post('http://localhost:8000/api/v1/user/signup/', formData);
           console.log('Signup successful', response.data);
+          localStorage.setItem('token', response.data.token);  // Store the token
+          navigate('/landing');  // Redirect to the landing page
         } catch (error) {
           console.error('Signup failed', error.response ? error.response.data : 'No response');
         }
