@@ -10,7 +10,6 @@ function BikeCard({ bike }) {
         <div>{bike.make}</div>
         <div>{bike.description}</div>
         <div>{bike.price}</div>
-        <Button variant="primary">Add to trip</Button>
       </Card.Body>
     </Card>
   );

@@ -29,6 +29,7 @@ const handleLogout = async () => {
             <li><Link to="bikes">Bikes</Link></li>
             <li><Link to="about">About</Link></li>
             <li><Link to="cart">Cart</Link></li>
+            <li><Link to="trips">Trips</Link></li>
             <li><button onClick={handleLogout}>Logout</button></li>
             </ul>
             
