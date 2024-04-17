@@ -59,6 +59,7 @@ class User_info(APIView):
         user = request.user
         if user.is_authenticated:
             user_data={
+                "id": user.id,
                 "username": user.username,
                 "email": user.email
             }

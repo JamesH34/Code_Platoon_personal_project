@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Trips
@@ -29,14 +29,22 @@ class CreateTrip(APIView):
         serializer = TripSerializer(trips, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
     
+    # def put(self, request, *args, **kwargs):
+    #     # user_trips = Trips.objects.filter(user_id=request.user).select_related('bike')
+    #     trip = Trips.objects.get(id=request.data['id']).select_related('bike')
+    #     serializer = TripSerializer(trip, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=HTTP_200_OK)
+    #     else:
+    #         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     def put(self, request, *args, **kwargs):
-        trip = Trips.objects.get(id=request.data['id'])
+        trip = get_object_or_404(Trips.objects.select_related('bike'), id=request.data.get('id'))
         serializer = TripSerializer(trip, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         
     def delete(self, request, *args, **kwargs):
         trip = Trips.objects.get(id=request.data['id'])

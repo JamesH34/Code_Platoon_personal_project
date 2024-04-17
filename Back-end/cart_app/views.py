@@ -11,7 +11,18 @@ from rest_framework.status import (
 )   
 from .serializers import CartSerializer
 from .models import Cart
-from .utils import update_total_price, create_stripe_checkout_session
+from .utils import update_total_price, create_stripe_checkout_session, handle_checkout_session
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import stripe
+import json
+import logging
+from dotenv import dotenv_values
+
+
+env=dotenv_values(".env")
+stripe.api_key = env.get("STRIPE_API_KEY")
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -23,13 +34,18 @@ class CartView(APIView):
             serializer.save()
             return Response(serializer.data, status=HTTP_201_CREATED)
         else:
+            logger.error(f'Cart creation failed: {serializer.errors}')
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 # simple get method to show the user what is in the cart
     def get(self, request, *args, **kwargs):
         carts = Cart.objects.all()
         serializer = CartSerializer(carts, many=True)
-        return Response(serializer.data, status=HTTP_200_OK)
+        total_price = update_total_price(serializer.data)  # Assuming the serialized data can be used directly
+        return Response({
+            "carts": serializer.data,
+            "total_price": f"${total_price:.2f}"
+        }, status=HTTP_200_OK)
 
 # allow the user to update or adjust things in the cart.
     def put(self, request, *args, **kwargs):
@@ -39,6 +55,7 @@ class CartView(APIView):
             serializer.save()
             return Response(serializer.data, status=HTTP_200_OK)
         else:
+            logger.error(f'Cart update failed: {serializer.errors}')
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 # remove an item from the cart
@@ -49,18 +66,76 @@ class CartView(APIView):
     
 
 # create a stripe checkout session
-    def post_checkout(self, request, *args, **kwargs):
-        cart_id = request.data.get('id')
-        if not cart_id:
-            return Response({'error': 'Cart ID is required'}, status=HTTP_400_BAD_REQUEST)
-
+class CheckoutView(APIView):
+    def post(self, request, *args, **kwargs):
         try:
-            cart = Cart.objects.get(id=cart_id)
-        except Cart.DoesNotExist:
-            return Response({'error': 'Cart not found'}, status=HTTP_404_NOT_FOUND)
+            # Assuming you send cart items as JSON in the request body
+            cart_items = request.data.get('carts', [])
 
-        session = create_stripe_checkout_session(cart)
-        if isinstance(session, dict) and 'id' in session:
-            return Response({'sessionId': session['id']}, status=HTTP_201_CREATED)
-        else:
-            return Response({'error': 'Failed to create checkout session'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+            # Create a list of Stripe line items from your cart data
+            line_items = [{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': f"Trip ID {item['trip']}",  # Customizing the product name
+                    },
+                    'unit_amount_decimal': int(float(item['trip_price']) * 100),  # Convert price to cents
+                },
+                'quantity': 1,  # This example assumes each line item has a quantity of 1
+            } for item in cart_items]
+
+            # Create a checkout session
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=line_items,
+                mode='payment',
+                success_url='http://127.0.0.1:8000/api/v1/my_cart/stripe/success/',
+                cancel_url='http://127.0.0.1:8000/api/v1/my_cart/stripe/cancel/',
+            )
+
+            return Response({'session_id': checkout_session['id']})
+        except Exception as e:
+            return Response({'error': str(e)}, status=HTTP_400_BAD_REQUEST)
+
+
+#  set up the stripe success and cancel views
+
+class StripeSuccessView(APIView):
+    def get(self, request, *args, **kwargs):
+        logger.info('Payment successful')
+        return Response({'message': 'Payment successful'}, status=HTTP_200_OK)
+    
+class StripeCancelView(APIView):
+    def get(self, request, *args, **kwargs):
+        logger.info('Payment cancelled')
+        return Response({'message': 'Payment cancelled'}, status=HTTP_200_OK)
+    
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    endpoint_secret = env.get("STRIPE_ENDPOINT_SECRET")
+
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+        logger.info(f"Handled webhook event: {event['type']}")
+    except ValueError as e:
+        logger.error(f"Webhook error - Invalid payload: {e}")
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        logger.error(f"Webhook error - Invalid signature: {e}")
+        return HttpResponse(status=400)
+
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        # Fulfill the purchase...
+        handle_checkout_session(session)
+
+    return HttpResponse(status=200)

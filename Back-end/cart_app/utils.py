@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 
 
 env=dotenv_values(".env")
-stripe.api_key = env.get("STRIPE_SECRET_KEY")
+stripe.api_key = env.get("STRIPE_API_KEY")
 
 
 def create_stripe_checkout_session(cart):
@@ -33,11 +33,16 @@ def create_stripe_checkout_session(cart):
         return str(e)
 
 
+def handle_checkout_session(session):
+    # Fulfill the purchase...
+    pass
+
 
 # do the calculations on the front end
-def update_total_price(cart):
-    if hasattr(cart, 'items'):  
-        total_price = sum(item.trip_price for item in cart.items.all())
-    else:
-        total_price = cart.trip_price  
+def update_total_price(cart_items):
+    total_price = 0.0
+    for item in cart_items:
+        # Convert the string price to a float and add it to the total
+        item_price = float(item['trip_price'])
+        total_price += item_price
     return total_price

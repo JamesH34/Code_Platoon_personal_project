@@ -54,17 +54,18 @@ def get_motorcycle_info(motorcycle_id):
 
 class AllMotorcycles(APIView):
     def get(self, request, *args, **kwargs):
-        motorcycle_ids = ["817774", "331639", "752591", "148037", "997759"]
+        motorcycle_ids = ["817774", "331639"]#, "752591", "148037", "997759"]
         serialized_bike_data=[]
         for motorcycle_id in motorcycle_ids:
             data = get_motorcycle_info(motorcycle_id)
             if data:
-                price=data.get('price')
-                bike=Bike(
-                    make=data.get('makeName'),
+                bike, created = Bike.objects.update_or_create(
+                 make=data.get('makeName'),
                     model=data.get('modelName'),
-                    description=data.get('categoryName'),
-                    price=price
+                    defaults={
+                        'description': data.get('categoryName'),
+                        'price': data.get('price')
+                    }
                 )
                 serializer=BikeSerializer(bike)
                 serialized_bike_data.append(serializer.data)
@@ -72,17 +73,14 @@ class AllMotorcycles(APIView):
 
 
 # add the motorcycle details to the sql database
-    # def post(self, request, *args, **kwargs):
-    #     data=request.data
-    #     bike=Bike(
-    #         make=data.get('make'),
-    #         model=data.get('model'),
-    #         description=data.get('description'),
-    #         price=data.get('price')
-    #     )
-    #     bike.save()
-    #     serializer=BikeSerializer(bike)
-    #     return Response(serializer.data, status=HTTP_201_CREATED)
+    def post(self, request, *args, **kwargs):
+        serializer = BikeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # Saves the Bike instance if valid
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
 
 # NEED TO HANDLE IMAGES
 

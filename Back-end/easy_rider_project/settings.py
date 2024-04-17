@@ -46,11 +46,13 @@ INSTALLED_APPS = [
     "cart_app",
     "trips_app",
     "motorcycle_app",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -140,3 +142,7 @@ REST_FRAMEWORK = {
    }
 
 MOTORCYCLE_API_URL='https://motorcycle-specs-database.p.rapidapi.com/'
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+

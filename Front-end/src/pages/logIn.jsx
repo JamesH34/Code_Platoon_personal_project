@@ -8,6 +8,7 @@ function LoginPage() {
     username: '',
     password: ''
   });
+
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
@@ -38,34 +39,34 @@ function LoginPage() {
 
 
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-        const response = await axios.post('http://localhost:8000/api/v1/user/login/', credentials);
-        console.log('Login successful', response.data);
-        localStorage.setItem('token', response.data.token);  // Store the token
-        const userResponse = await axios.get('http://localhost:8000/api/v1/user/userinfo/', {
-            headers: { 'Authorization': `Token ${response.data.token}` }
-        });
-        localStorage.setItem('user', JSON.stringify(userResponse.data)); // Store user data
-        navigate('/landing');  // Redirect to the landing page
-    } catch (error) {
-        console.error('Login failed', error.response ? error.response.data : 'No response');
-    }
-};
+//   const handleSubmit = async (event) => {
+//     event.preventDefault();
+//     try {
+//         const response = await axios.post('http://localhost:8000/api/v1/user/login/', credentials);
+//         console.log('Login successful', response.data);
+//         localStorage.setItem('token', response.data.token);  // Store the token
+//         const userResponse = await axios.get('http://localhost:8000/api/v1/user/userinfo/', {
+//             headers: { 'Authorization': `Token ${response.data.token}` }
+//         });
+//         localStorage.setItem('user', JSON.stringify(userResponse.data)); // Store user data
+//         navigate('/landing');  // Redirect to the landing page
+//     } catch (error) {
+//         console.error('Login failed', error.response ? error.response.data : 'No response');
+//     }
+// };
 
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     try {
-    //         const response = await axios.post('http://localhost:8000/api/v1/user/login/', credentials);
-    //         console.log('Login successful', response.data);
-    //         localStorage.setItem('token', response.data.token);  // Store the token
-    //         fetchUserDetails(response.data.token);
-    //         navigate('/landing');  // Redirect to the landing page
-    //     } catch (error) {
-    //         console.error('Login failed', error.response ? error.response.data : 'No response');
-    //     }
-    //     };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:8000/api/v1/user/login/', credentials);
+            console.log('Login successful', response.data);
+            localStorage.setItem('token', response.data.token);  // Store the token
+            fetchUserDetails(response.data.token);
+            navigate('/landing');  // Redirect to the landing page
+        } catch (error) {
+            console.error('Login failed', error.response ? error.response.data : 'No response');
+        }
+        };
   
     return (
     <div>
