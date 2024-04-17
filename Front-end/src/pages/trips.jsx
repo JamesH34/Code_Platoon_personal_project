@@ -72,13 +72,14 @@ function TripsPage() {
             });
             console.log('Trip updated successfully', response.data);
             setShowModal(false);
-            setTrips(trips.map(trip => {
-                if (trip.id === editData.id) {
-                    return { ...trip, ...editData };
-                }
-                return trip;
-            }));
-            setShowModal(false);
+            // setTrips(trips.map(trip => {
+            //     if (trip.id === editData.id) {
+            //         return { ...trip, ...editData };
+            //     }
+            //     return trip;
+            // }));
+            // setShowModal(false);
+            setTrips(trips.map(trip => trip.id === response.data.id ? response.data : trip));
     
         } 
         catch (error) {
