@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import api from '../../utilities';
 
 function TripsPage() {
     const [trips, setTrips] = useState([]);
@@ -10,7 +11,7 @@ function TripsPage() {
     useEffect(() => {
         const fetchTrips = async () => {
             try{
-                const response = await axios.get('http://localhost:8000/api/v1/trips/create/', {
+                const response = await api.get('trips/create/', {
                     headers: { Authorization: `Token ${localStorage.getItem('token')}` }
                 });
                 setTrips(response.data);
@@ -31,7 +32,8 @@ function TripsPage() {
                              <h2>{trip.start_date} to {trip.end_date}</h2>
                             <p>Cost: {trip.total_cost}</p>
                             <Button>Add To Cart</Button>
-                            <Button>Edit This Trip</Button><Button variant="danger">Cancel Trip</Button>
+                            <Button>Edit This Trip</Button>
+                            <Button variant="danger">Cancel Trip</Button>
 
                             </Card.Body>
                         </Card>

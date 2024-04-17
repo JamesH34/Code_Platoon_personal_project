@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from '../../utilities';
 
 function LoginPage() {
   
@@ -26,7 +27,7 @@ function LoginPage() {
 
     const fetchUserDetails = async (token) => {
       try {
-          const response = await axios.get('http://localhost:8000/api/v1/user/userinfo/', {
+          const response = await api.get('user/userinfo/', {
               headers: { Authorization: `Token ${token}` }
           });
           setCurrentUser(response.data);
@@ -58,7 +59,7 @@ function LoginPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/v1/user/login/', credentials);
+            const response = await api.post('user/login/', credentials);
             console.log('Login successful', response.data);
             localStorage.setItem('token', response.data.token);  // Store the token
             fetchUserDetails(response.data.token);

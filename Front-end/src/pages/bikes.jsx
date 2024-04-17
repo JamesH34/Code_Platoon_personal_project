@@ -4,6 +4,7 @@ import BikeCard from '../components/cards';
 import imageMap from '../components/imageMap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import api from '../../utilities';
 
 
 
@@ -19,7 +20,7 @@ function BikesPage() {
     useEffect(() => {
         const fetchBikes = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/v1/motorcycles/all_motorcycles/');
+                const response = await api.get('motorcycles/all_motorcycles/');
                 const bikesWithImages = response.data.map(bike => ({
                     ...bike,
                     imageUrl: imageMap[bike.model] || '/images/Rebel.jpg' 
@@ -56,7 +57,7 @@ function BikesPage() {
     
         setSubmitting(true);
         try {
-            const response = await axios.post('http://localhost:8000/api/v1/trips/create/', tripData, {
+            const response = await api.post('trips/create/', tripData, {
                 headers: { Authorization: `Token ${localStorage.getItem('token')}` }
             });
             alert('Trip created successfully');

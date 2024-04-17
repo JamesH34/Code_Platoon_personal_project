@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from '../../utilities';
 
 function SignupPage() {
     const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ function SignupPage() {
       const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-          const response = await axios.post('http://localhost:8000/api/v1/user/signup/', formData);
+          const response = await api.post('user/signup/', formData);
           console.log('Signup successful', response.data);
           localStorage.setItem('token', response.data.token);  // Store the token
           navigate('/landing');  // Redirect to the landing page
