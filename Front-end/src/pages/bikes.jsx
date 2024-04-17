@@ -50,7 +50,7 @@ function BikesPage() {
     
         const tripData = {
             bike_id: selectedBike,
-            user_id: currentUser.id,
+            user: currentUser.id,
             start_date: startDate.toISOString().split('T')[0],
             end_date: endDate.toISOString().split('T')[0],
         };
