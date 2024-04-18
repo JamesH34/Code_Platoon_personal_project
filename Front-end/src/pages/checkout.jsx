@@ -31,21 +31,8 @@ const CheckoutForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px' }}>
-            <CardElement options={{
-                style: {
-                    base: {
-                        fontSize: '16px',
-                        color: '#424770',
-                        '::placeholder': {
-                            color: '#aab7c4',
-                        },
-                    },
-                    invalid: {
-                        color: '#9e2146',
-                    },
-                },
-            }} />
+        <form onSubmit={handleSubmit}>
+            <CardElement />
             <button type="submit" disabled={!stripe}>
                 Pay
             </button>

@@ -72,9 +72,9 @@ function BikesPage() {
     
 
         return (
-            <div className='view-bikes-page'>
+            <div>
                 <h1>View Bikes on this page</h1>
-                <form onSubmit={handleSubmit} className='bike-form'>
+                <form onSubmit={handleSubmit} style={{ margin: '20px' }}>
                     <div>
                         <label>Select Bike:</label>
                         <select value={selectedBike} onChange={e => setSelectedBike(e.target.value)}>

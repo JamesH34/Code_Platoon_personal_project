@@ -5,88 +5,38 @@
   text-align: center;
 }
 
-
-
-
-.about-background {
-  background-image: url('your-image-url-here.jpg'); /* Replace with your actual image URL */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh; /* Adjust based on your preference */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-.container {
-  background-color: #ffffff; /* Solid white, fully opaque */
-  padding: 20px;
-  border-radius: 15px; /* Rounded corners */
-  width: 80%; /* Adjust width as necessary */
-  max-width: 600px; /* Maximum width */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-  text-align: center; /* Center the text */
-}
-
-.content p {
-  font-size: 1rem;
-  color: #333; /* Dark gray text color */
-}
-
-.view-bikes-page {
-  padding-top: 50px; /* Adjust as needed to prevent navbar overlap */
-}
-
-.bike-form {
-  margin: 20px;
-}
-
-.bikes-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding-top: 20px;
-}
-
-@media (max-width: 768px) {
-  .bikes-container {
-      flex-direction: column;
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
-
-.CardElement {
-  /* Set the width of the CardElement */
-  width: 100%;
-  /* Set the desired height of the CardElement */
-  height: 80px; /* Adjust the height as needed */
-  /* Add padding to the CardElement */
-  padding: 15px; /* Adjust padding as needed */
-  /* Set border properties */
-  border: 1px solid #ccc;
-  border-radius: 8px; /* Adjust border radius as needed */
-  /* Remove any default outlines */
-  outline: none;
-}
-
-/* Adjust the size of the submit button */
-button[type="submit"] {
-  /* Set the width of the button */
-  width: 100%;
-  /* Add padding to the button */
-  padding: 12px 20px; /* Adjust padding as needed */
-  /* Set border properties */
-  border: 1px solid #ccc;
-  border-radius: 8px; /* Adjust border radius as needed */
-  /* Remove any default outlines */
-  outline: none;
-}
-
-
-.stripe-card-group, div#stripe-cvc-element, div#stripe-exp-element {
-  width: 200%;
-}
-.wc-stripe-elements-field {
-  min-height: 50px;
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
   }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
