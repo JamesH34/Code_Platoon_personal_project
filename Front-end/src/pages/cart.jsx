@@ -6,6 +6,7 @@ import { Card, Button, Modal } from 'react-bootstrap';
 
 function CartPage() {
     const [cartItems, setCartItems] = useState([]);
+    const [total_price, setTotalPrice] = useState(0.0);
 
     useEffect(() => {
         const fetchCartItems = async () => {
@@ -16,6 +17,7 @@ function CartPage() {
                 console.log("response.data", response.data)
                 console.log("Cart items:", response.data.carts); 
                 setCartItems(response.data.carts);
+                calculateTotalPrice(response.data.carts);
             } catch (error) {
                 console.error('Failed to fetch cart items', error);
             }
@@ -31,7 +33,9 @@ function CartPage() {
                 headers: { Authorization: `Token ${localStorage.getItem('token')}` }    
             });
             if(response.status === 204)
+            // setCartItems(prevCartItems => prevCartItems.filter(item => item.id !== cartItemId));
             setCartItems(cartItems.filter(item => item.id !== cartItemId));
+            calculateTotalPrice(cartItems.filter(item => item.id !== cartItemId));
             alert('Trip removed from cart');
         } catch (error) {
             console.error('Failed to remove trip from cart', error);
@@ -39,7 +43,13 @@ function CartPage() {
         }
     };
 
-
+const calculateTotalPrice = (items) => {
+    let total = 0.0
+    items.forEach(item => {
+        total += parseFloat(item.trip_price)
+    });
+    setTotalPrice(total);
+};
    
 
     return (
@@ -71,7 +81,7 @@ function CartPage() {
                     <Modal.Title>Checkout</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to proceed with checkout?
+                    Total Price: ${total_price.toFixed(2)}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" >Checkout</Button>
