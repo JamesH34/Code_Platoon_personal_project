@@ -31,7 +31,7 @@ function CartPage() {
                 headers: { Authorization: `Token ${localStorage.getItem('token')}` }    
             });
             if(response.status === 204)
-            setCartItems(cartItems.filter(item => item.trip !== cartItemId));
+            setCartItems(cartItems.filter(item => item.id !== cartItemId));
             alert('Trip removed from cart');
         } catch (error) {
             console.error('Failed to remove trip from cart', error);

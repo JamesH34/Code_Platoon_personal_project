@@ -48,9 +48,7 @@ function TripsPage() {
         fetchCartItems();
     }, []);
 
-    const isTripInCart = (tripId) => {
-        return cartItems.some(item => item.trip === tripId);
-    }
+  
 
 
     const handleShowModal = (trip) => {
@@ -106,7 +104,7 @@ function TripsPage() {
             });
         }
     };
-;
+
 
     const addToCart = async (tripId, tripPrice) => {
         try {
@@ -115,17 +113,24 @@ function TripsPage() {
                 trip_price: tripPrice,
             };
             const response = await api.post("/my_cart/cart/", postData, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                headers: { Authorization: `Token ${localStorage.getItem('token')}` }
             });
-            console.log('Trip added to cart successfully', response.data);
-            alert('Trip added to cart successfully!');
+            if (response.status === 201) {
+                console.log('Trip added to cart successfully', response.data);
+                alert('Trip added to cart successfully!');
+            } else {
+                console.error('Failed to add trip to cart', response.data);
+                alert('Failed to add trip to cart');
+            }
         } catch (error) {
-            console.error('Failed to add trip to cart', error);
-            alert('Failed to add trip to cart.');
+            console.error('Failed to add trip to cart', error.response ? error.response.data : error.message);
+            alert('Failed to add trip to cart. Check console for more information.');
         }
     };
     
-      
+    const isTripInCart = (tripId) => {
+        return cartItems.some(item => item.trip === tripId);
+    }
 
 
 
@@ -138,7 +143,7 @@ function TripsPage() {
                              <h2>{trip.bike.make} {trip.bike.model} </h2>
                              <h2>{trip.start_date} to {trip.end_date}</h2>
                             <p>Cost: {trip.total_cost}</p>
-                            <Button onClick={()=>addToCart(trip.id)} disabled={isTripInCart(trip.id)}>Add To Cart</Button>
+                            <Button onClick={()=>addToCart(trip.id, trip.total_cost)} disabled={isTripInCart(trip.id)}>Add To Cart</Button>
                             <Button onClick={() => handleShowModal(trip)}>Edit This Trip</Button>
                             <Button variant="danger" onClick={() => handleDeleteTrip(trip.id)}>Cancel Trip</Button>
 

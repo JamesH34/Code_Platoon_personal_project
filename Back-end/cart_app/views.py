@@ -19,6 +19,7 @@ import json
 import logging
 from dotenv import dotenv_values
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 
 env=dotenv_values(".env")
@@ -28,23 +29,31 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 class CartView(APIView):
+    permission_classes = [IsAuthenticated]
     #  create new cart using the cart serializer
     def post(self, request, *args, **kwargs):
-        serializer = CartSerializer(data=request.data)
+        print('POST data recieved:', request.data)  
+        serializer = CartSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
+            cart_item = serializer.save()
+            print("serializer data after save:", serializer.data)
             return Response(serializer.data, status=HTTP_201_CREATED)
         else:
+            print("serializer errors:", serializer.errors)
             logger.error(f'Cart creation failed: {serializer.errors}')
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-
+        
 # simple get method to show the user what is in the cart
     def get(self, request, *args, **kwargs):
-        carts = Cart.objects.all()
-        serializer = CartSerializer(carts, many=True)
-        total_price = update_total_price(serializer.data)  
+        
+        serializer = CartSerializer(Cart.objects.all(), many=True)
+        carts = serializer.data
+        # total_price = update_total_price(serializer.data.carts)  
+        total_price = 0.0
+        for item in carts:
+            total_price += float(item.get('trip_price', 0.0))
         return Response({
-            "carts": serializer.data,
+            "carts": carts,
             "total_price": f"${total_price:.2f}"
         }, status=HTTP_200_OK)
 
