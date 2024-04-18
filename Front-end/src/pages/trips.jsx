@@ -108,6 +108,7 @@ function TripsPage() {
 
     const addToCart = async (tripId, tripPrice) => {
         try {
+            setCartItems([...cartItems, { trip: tripId}]);
             const postData = {
                 trip: tripId,
                 trip_price: tripPrice,
