@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import api from '../../utilities';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Modal } from 'react-bootstrap';
 
 
 function CartPage() {
@@ -60,10 +60,24 @@ function CartPage() {
                             <Button variant="danger" onClick={() => removeFromCart(item.id)}>Remove from Cart</Button>
                         </Card.Body>
                     </Card>
+                    
                 ))
             ) : (
                 <p>Your cart is empty.</p>
             )}
+
+            <Modal show={true} backdrop="static" keyboard={false}>
+            <Modal.Header>
+                    <Modal.Title>Checkout</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to proceed with checkout?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" >Checkout</Button>
+                </Modal.Footer>
+            
+            </Modal>
         </div>
     );
 }
