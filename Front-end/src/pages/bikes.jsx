@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+
 import BikeCard from '../components/cards';
 import imageMap from '../components/imageMap';
 import DatePicker from 'react-datepicker';

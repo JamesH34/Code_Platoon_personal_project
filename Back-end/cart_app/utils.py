@@ -43,6 +43,12 @@ def update_total_price(cart_items):
     total_price = 0.0
     for item in cart_items:
         # Convert the string price to a float and add it to the total
-        item_price = float(item['trip_price'])
-        total_price += item_price
+        total_price += float(item['trip_price'])
+        
     return total_price
+
+
+# def update_total_price(cart):
+#     return cart.trip_price
+# def update_total_price_for_cart(cart):
+#     return float(cart.total_price)

@@ -32,7 +32,7 @@ function LoginPage() {
           });
           setCurrentUser(response.data);
           localStorage.setItem('user', JSON.stringify(response.data)); // Store user data in localStorage
-          navigate('/landing');  // Redirect to the landing page
+          navigate('/about');  // Redirect to the landing page
       } catch (error) {
           console.error('Failed to fetch user details', error.response ? error.response.data : 'No response');
       }

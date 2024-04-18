@@ -27,6 +27,11 @@ class Sign_up(APIView):
         if serializer.is_valid():
             user = serializer.save()
             token = Token.objects.create(user=user)
+            user_data = {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email
+            }
             return Response({'user': user.username, "token": token.key}, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
       

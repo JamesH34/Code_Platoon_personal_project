@@ -22,6 +22,7 @@ const handleLogout = async () => {
     try {
         await api.post('user/logout/', null, config);
         localStorage.removeItem('token');  // Remove the token
+        localStorage.removeItem('user');  // Remove the user data
         navigate('/');  // Redirect to the login page
     } catch (error) {
         console.error('Logout failed', error.response ? error.response.data : 'No response');

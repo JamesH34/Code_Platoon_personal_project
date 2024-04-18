@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form } from 'react-bootstrap';
-import axios from 'axios';
+
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import api from '../../utilities';
@@ -17,6 +17,7 @@ function TripsPage() {
         bike: '',
         user: '',
     });
+    const [cartItems, setCartItems] = useState([]);
     
 
     useEffect(() => {
@@ -33,29 +34,34 @@ function TripsPage() {
         fetchTrips();
     }, []);
 
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const response = await api.get('/my_cart/cart/', {
+                    headers: { Authorization: `Token ${localStorage.getItem('token')}` }
+                });
+                setCartItems(response.data.carts); 
+            } catch (error) {
+                console.error('Failed to fetch cart items', error);
+            }
+        };
+        fetchCartItems();
+    }, []);
 
-    
+    const isTripInCart = (tripId) => {
+        return cartItems.some(item => item.trip === tripId);
+    }
+
+
     const handleShowModal = (trip) => {
         setEditData({
             id: trip.id,
-            // make: trip.bike.make,
-            // model: trip.bike.model,
             start_date: trip.start_date,    
-            end_date: trip.end_date,
-            // total_cost: trip.total_cost,
-            // bike_id: trip.bike.id,
-            // user_id: trip.user.id,
+            end_date: trip.end_date, 
         });
         setShowModal(true);
     };
 
-    // const handleChange = (event) => {
-    //     const { name, value } = event.target;
-    //     setEditData(prevData => ({
-    //         ...prevData,
-    //         [name]: value
-    //     }));
-    // }
     const handleChange = (event) => {
         const { name, value } = event.target;
         setEditData(prevData => ({
@@ -72,13 +78,6 @@ function TripsPage() {
             });
             console.log('Trip updated successfully', response.data);
             setShowModal(false);
-            // setTrips(trips.map(trip => {
-            //     if (trip.id === editData.id) {
-            //         return { ...trip, ...editData };
-            //     }
-            //     return trip;
-            // }));
-            // setShowModal(false);
             setTrips(trips.map(trip => trip.id === response.data.id ? response.data : trip));
     
         } 
@@ -107,6 +106,27 @@ function TripsPage() {
             });
         }
     };
+;
+
+    const addToCart = async (tripId, tripPrice) => {
+        try {
+            const postData = {
+                trip: tripId,
+                trip_price: tripPrice,
+            };
+            const response = await api.post("/my_cart/cart/", postData, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            console.log('Trip added to cart successfully', response.data);
+            alert('Trip added to cart successfully!');
+        } catch (error) {
+            console.error('Failed to add trip to cart', error);
+            alert('Failed to add trip to cart.');
+        }
+    };
+    
+      
+
 
 
         return (
@@ -118,7 +138,7 @@ function TripsPage() {
                              <h2>{trip.bike.make} {trip.bike.model} </h2>
                              <h2>{trip.start_date} to {trip.end_date}</h2>
                             <p>Cost: {trip.total_cost}</p>
-                            <Button>Add To Cart</Button>
+                            <Button onClick={()=>addToCart(trip.id)} disabled={isTripInCart(trip.id)}>Add To Cart</Button>
                             <Button onClick={() => handleShowModal(trip)}>Edit This Trip</Button>
                             <Button variant="danger" onClick={() => handleDeleteTrip(trip.id)}>Cancel Trip</Button>
 

@@ -53,7 +53,7 @@ class TripManagement(APIView):
 
 class ViewTrips(APIView):
     def get(self, request, *args, **kwargs):
-        trips = Trips.objects.all()
+        trips = Trips.objects.filter(user=request.user) #make sure only the user that made the trip gets to view it
         serializer = TripSerializer(trips, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
 

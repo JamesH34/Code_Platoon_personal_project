@@ -24,10 +24,12 @@ function SignupPage() {
       const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
           const response = await api.post('user/signup/', formData);
           console.log('Signup successful', response.data);
           localStorage.setItem('token', response.data.token);  // Store the token
-          navigate('/landing');  // Redirect to the landing page
+          navigate('/login');  // Redirect to the login page
         } catch (error) {
           console.error('Signup failed', error.response ? error.response.data : 'No response');
         }

@@ -18,6 +18,7 @@ import stripe
 import json
 import logging
 from dotenv import dotenv_values
+from django.shortcuts import get_object_or_404
 
 
 env=dotenv_values(".env")
@@ -41,7 +42,7 @@ class CartView(APIView):
     def get(self, request, *args, **kwargs):
         carts = Cart.objects.all()
         serializer = CartSerializer(carts, many=True)
-        total_price = update_total_price(serializer.data)  # Assuming the serialized data can be used directly
+        total_price = update_total_price(serializer.data)  
         return Response({
             "carts": serializer.data,
             "total_price": f"${total_price:.2f}"
@@ -59,11 +60,13 @@ class CartView(APIView):
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 # remove an item from the cart
-    def delete(self, request, *args, **kwargs):
-        cart = Cart.objects.get(id=request.data['id'])
-        cart.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
-    
+class CartItemDeleteView(APIView):
+    def delete(self, request, cart_item_id):
+            cart_item = get_object_or_404(Cart, id=cart_item_id, user=request.user)
+            cart_item.delete()
+            logger.debug(f"Deleted cart item with ID: {cart_item_id}")
+            return Response(status=HTTP_204_NO_CONTENT)
+
 
 # create a stripe checkout session
 class CheckoutView(APIView):
