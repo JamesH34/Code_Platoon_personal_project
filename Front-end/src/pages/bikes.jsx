@@ -72,8 +72,8 @@ function BikesPage() {
     
 
         return (
-            <div>
-                <h1>View Bikes on this page</h1>
+            <div style= {{ paddingTop: '70px' }}>
+                <h1>View Our Selection</h1>
                 <form onSubmit={handleSubmit} style={{ margin: '20px' }}>
                     <div>
                         <label>Select Bike:</label>
