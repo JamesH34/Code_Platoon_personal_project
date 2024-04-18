@@ -40,3 +40,17 @@
 .read-the-docs {
   color: #888;
 }
+
+
+.bikes-container {
+  display: flex;        /* Enables Flexbox */
+  flex-wrap: wrap;      /* Allows items to wrap onto the next line as needed */
+  gap: 20px;            /* Adds space between the cards */
+  justify-content: center; /* Center-aligns the items if they don't fill the whole line */
+  padding: 20px;        /* Padding around the container */
+}
+
+.bike-card {
+  flex: 0 1 200px;      /* Flex grow, flex shrink, flex basis - cards will not grow but can shrink, starting at 200px wide */
+  /* Add more styles here to define borders, padding, etc., for each bike card */
+}

@@ -54,7 +54,7 @@ def get_motorcycle_info(motorcycle_id):
 
 class AllMotorcycles(APIView):
     def get(self, request, *args, **kwargs):
-        motorcycle_ids = ["817774", "331639"]#, "752591", "148037", "997759"]
+        motorcycle_ids = ["817774", "331639", "752591", "148037", "997759"]
         serialized_bike_data=[]
         for motorcycle_id in motorcycle_ids:
             data = get_motorcycle_info(motorcycle_id)

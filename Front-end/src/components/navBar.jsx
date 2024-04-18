@@ -30,24 +30,22 @@ const handleLogout = async () => {
     };
 
     return (
-        
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container>
-        <Navbar.Brand href="about">Easy Rider</Navbar.Brand>
-        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="bikes">Bikes </Nav.Link>
-            <Nav.Link href="trips">Trips </Nav.Link>
-             <Nav.Link href="cart">Cart </Nav.Link>
-             <Button onClick={handleLogout}>Logout</Button>
-             
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  );
-}
+      <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
+        <Container>
+          <Navbar.Brand href="about">Easy Rider</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />  {/* Uncommented to enable toggle */}
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="bikes">Bikes</Nav.Link>
+              <Nav.Link href="trips">Trips</Nav.Link>
+              <Nav.Link href="cart">Cart</Nav.Link>
+            </Nav>
+            <Button onClick={handleLogout} className="ms-auto">Logout</Button>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    );
+  }
 
 export default NavBar;
 

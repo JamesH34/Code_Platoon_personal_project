@@ -105,20 +105,13 @@ const handleCheckout = async () => {
                 <p>Your cart is empty.</p>
             )}
 
-            <Modal show={true} backdrop="static" keyboard={false}>
-            <Modal.Header>
-                    <Modal.Title>Checkout</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    Total Price: ${total_price.toFixed(2)}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Link to='/checkout' className='checkout-button'> Checkout </Link>
-                </Modal.Footer>
-            
-            </Modal>
+<div className="checkout-container" style={{ marginTop: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '5px' }}>
+            <h2>Checkout</h2>
+            <p>Total Price: ${total_price.toFixed(2)}</p>
+            <Link to='/checkout' className='btn btn-primary'>Checkout</Link>
         </div>
-    );
+    </div>
+  );
 }
 
 export default CartPage;

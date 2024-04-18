@@ -32,6 +32,7 @@ const CheckoutForm = () => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <h1>Please Enter Your Card Details</h1>
             <CardElement />
             <button type="submit" disabled={!stripe}>
                 Pay
@@ -43,6 +44,7 @@ const CheckoutForm = () => {
 const CheckoutPage = () => {
     return (
         <Elements stripe={stripePromise}>
+            
             <CheckoutForm />
         </Elements>
     );
