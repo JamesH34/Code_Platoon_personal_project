@@ -8,6 +8,7 @@ import BikesPage from './pages/bikes';
 import AboutPage from './pages/about';
 import CartPage from './pages/cart';
 import TripsPage from './pages/trips';
+import CheckoutPage from './pages/checkout';
 
 const router = createBrowserRouter([
     { path: '/', element: <HomePage /> },
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
             {path: "about", element: <AboutPage />},
             {path: "cart", element: <CartPage />},
             {path: "trips", element: <TripsPage />},
+            {path: "checkout", element: <CheckoutPage />}
         ]
     },
     {

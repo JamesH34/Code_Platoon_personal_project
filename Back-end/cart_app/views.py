@@ -80,10 +80,9 @@ class CartItemDeleteView(APIView):
 class CheckoutView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            # Assuming you send cart items as JSON in the request body
             cart_items = request.data.get('carts', [])
 
-            # Create a list of Stripe line items from your cart data
+            # Create a list of Stripe line items from cart data
             line_items = [{
                 'price_data': {
                     'currency': 'usd',
@@ -122,7 +121,7 @@ class StripeCancelView(APIView):
         return Response({'message': 'Payment cancelled'}, status=HTTP_200_OK)
     
 
-@csrf_exempt
+@csrf_exempt #this is because info is coming from stripe, which will not have a token
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']

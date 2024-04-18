@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../utilities';
 import { Card, Button, Modal } from 'react-bootstrap';
+import { loadStripe } from '@stripe/stripe-js';
+// import { Stripe_pub_key } from '../../utilities';
+
+
+const stripePromise = loadStripe('pk_test_51P4k6MESpb9S7WlJavRKQRVgqZVozI7wxQKwq8MjnpBfPQxBKSX4AsI6Xc7AyRqFwVjXEp263IA647JPZCt5IoET00gr5j4UEo')
 
 
 function CartPage() {
@@ -52,6 +58,29 @@ const calculateTotalPrice = (items) => {
 };
    
 
+const handleCheckout = async () => {
+    const stripe = await stripePromise;
+    const response = await fetch('/checkout/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: total_price }),
+    });
+    const { clientSecret } = await response.json();
+        const result = await stripe.confirmCardPayment(clientSecret);
+        if (result.error) {
+            console.error(result.error.message);
+            alert('Payment failed. Please try again.');
+        } else {
+            alert('Payment successful!');
+            //Clear cart items after successful payment
+            setCartItems([]);
+            setTotalPrice(0.0);
+        }
+    };
+
+
     return (
         <div>
             <h1>My Cart</h1>
@@ -84,7 +113,7 @@ const calculateTotalPrice = (items) => {
                     Total Price: ${total_price.toFixed(2)}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" >Checkout</Button>
+                    <Link to='/checkout' className='checkout-button'> Checkout </Link>
                 </Modal.Footer>
             
             </Modal>
