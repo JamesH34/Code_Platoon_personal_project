@@ -45,9 +45,8 @@ class CartView(APIView):
         
 # simple get method to show the user what is in the cart
     def get(self, request, *args, **kwargs):
-        
-        serializer = CartSerializer(Cart.objects.all(), many=True)
-        carts = serializer.data
+        user_id = request.user.id
+        carts = Cart.objects.filter(user=user_id).values()
         # total_price = update_total_price(serializer.data.carts)  
         total_price = 0.0
         for item in carts:
