@@ -84,6 +84,11 @@ const handleCheckout = async () => {
     return (
         <div>
             <h1>My Cart</h1>
+            <div className="checkout-container">
+                <h2>Checkout</h2>
+                <p>Total Price: ${total_price.toFixed(2)}</p>
+                <Link to='/checkout' className='checkout-button'> Checkout </Link>
+            </div>
             {cartItems.length > 0 ? (
                 cartItems.map(item => (
                     <Card key={item.id}>
@@ -99,24 +104,10 @@ const handleCheckout = async () => {
                             <Button variant="danger" onClick={() => removeFromCart(item.id)}>Remove from Cart</Button>
                         </Card.Body>
                     </Card>
-                    
                 ))
             ) : (
                 <p>Your cart is empty.</p>
             )}
-
-            <Modal show={true} backdrop="static" keyboard={false}>
-            <Modal.Header>
-                    <Modal.Title>Checkout</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    Total Price: ${total_price.toFixed(2)}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Link to='/checkout' className='checkout-button'> Checkout </Link>
-                </Modal.Footer>
-            
-            </Modal>
         </div>
     );
 }
